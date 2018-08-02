@@ -15,7 +15,27 @@ from ansible import constants as C
 from ansible.plugins.action.normal import ActionModule as _ActionModule
 from ansible.module_utils.basic import AnsibleFallbackNotFound
 from ansible.module_utils.six import iteritems
-from routeros_utils import routeros_argument_spec
+from ansible.module_utils.basic import env_fallback
+#from ansible.module_utils.routeros_utils import routeros_argument_spec
+
+routeros_provider_spec = {
+    'host': dict(),
+    'port': dict(type='int'),
+
+    'username': dict(fallback=(env_fallback, ['ANSIBLE_NET_USERNAME'])),
+    'password': dict(fallback=(env_fallback, ['ANSIBLE_NET_PASSWORD']), no_log=True),
+    'ssh_keyfile': dict(fallback=(env_fallback, ['ANSIBLE_NET_SSH_KEYFILE']), type='path'),
+
+    'use_ssl': dict(type='bool'),
+    'validate_certs': dict(type='bool'),
+
+    'timeout': dict(type='int'),
+
+    'transport': dict(default='cli', choices=['cli', 'api'])
+}
+routeros_argument_spec = {
+    'provider': dict(type='dict', options=routeros_provider_spec),
+}
 
 try:
     from __main__ import display

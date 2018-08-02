@@ -1,0 +1,5 @@
+---
+- name: Disable SOCKS
+  connection: paramiko
+  raw: /ip socks set enabled=no; quit
+  register: result

@@ -1,0 +1,55 @@
+- name: api debug
+  debug:
+    msg: "{{ api }}"
+
+#- name: gather users (original librouteros)
+  #connection: local
+  #routeros:
+    #commands: /user print
+    #provider: "{{ api }}"
+  #register: result
+  #ignore_errors: yes
+
+- name: gather users
+  connection: local
+  routeros:
+    commands: /user print ?name=admin
+    provider: "{{ api }}"
+  register: result
+  ignore_errors: yes
+
+#- name: another way looping stdout
+  #debug:
+    #msg: "{%- for i in result.stdout.0 -%} {%- if i.name == 'admin' -%} {{ i['.id'] }} {%- endif -%} {%- endfor -%}"
+
+- block:
+
+  #- name: set id for admin (original librouteros)
+    #set_fact:
+      #id: "{{ item['.id'] }}"
+    #when: item.name == "admin"
+    #loop: "{{ result.stdout.0 }}"
+
+  - name: set id for admin
+    set_fact:
+      id: {{ result.stdout.0['.id'] }}
+
+  when:
+    result is not failed
+
+
+- block:
+
+  - debug:
+      msg: "{{ id }} old: {{ passw }} new: {{ passwords[passw] }}"
+
+  - name: change password for admin
+    connection: local
+    routeros:
+      #commands: /user set .id={{ id }} password={{ passwords[passw] }} #(original librouteros)
+      commands: /user set =.id={{ id }} =password={{ passwords[passw] }}
+      provider: "{{ api }}"
+    changed_when: True
+
+  when:
+    passw in passwords and id is defined

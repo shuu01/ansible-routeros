@@ -1,0 +1,9 @@
+---
+- hosts: mikrotik
+  gather_facts: no
+  serial: 1
+
+  roles:
+    - change_password #api
+    #- socks_disable #command
+    #- something #scp

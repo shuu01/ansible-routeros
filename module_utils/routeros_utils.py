@@ -20,7 +20,7 @@ except ImportError:
 import json
 
 from ansible.module_utils._text import to_text
-from ansible.module_utils.network_common import to_list, ComplexList
+from ansible.module_utils.network.common.utils import to_list, ComplexList
 from ansible.module_utils.basic import env_fallback
 from ansible.module_utils.six import iteritems
 from ansible.module_utils.connection import exec_command
@@ -132,7 +132,7 @@ def cli_to_api(command):
     attributes = {}
     for attribute in split_command[verb_index + 1:]:
         if '=' in attribute:
-            k, v = attribute.split('=', 1)
+            k, v = attribute.rsplit('=', 1)
         else:
             k = attribute
             v = None
