@@ -2,3 +2,5 @@ temp
 *.pyc
 *.retry
 __pycache__
+inventory
+roles/change_password/vars/main.yml

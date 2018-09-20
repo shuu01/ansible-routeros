@@ -1,0 +1,11 @@
+- name: Set filename
+  set_fact:
+    filename={{inventory_hostname}}_{{ansible_host}}_{{name}}
+
+- name: Exporting current configuration to text
+  connection: paramiko
+  raw: /export file={{filename}}
+
+- name: FTP export config
+  connection: paramiko
+  raw: /tool fetch address={{ftpserver}} src-path={{filename}}.rsc user={{ftpuser}} mode=ftp upload=yes dst-path=/upload/{{filename}}.rsc

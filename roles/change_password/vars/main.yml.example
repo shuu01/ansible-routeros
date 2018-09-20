@@ -8,4 +8,4 @@ api:
     username: "{{ ansible_user }}"
     password: "{{ ansible_ssh_pass }}"
     transport: "api"
-    port: 8728
+    use_ssl: False

@@ -32,11 +32,11 @@
 
   - name: set id for admin
     set_fact:
-      id: {{ result.stdout.0['.id'] }}
+      id: "{{ result.stdout.0.0['.id'] }}"
+    no_log: yes
 
   when:
     result is not failed
-
 
 - block:
 

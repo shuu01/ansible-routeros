@@ -1,7 +1,6 @@
----
-- name: Disable SOCKS
+- name: Enable Api
   connection: paramiko
-  raw: /ip socks set enabled=no; quit
+  raw: "/ip service set api disabled=no; quit"
   register: result
   ignore_errors: yes
   when:

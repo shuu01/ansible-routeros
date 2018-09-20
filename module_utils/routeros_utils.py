@@ -18,6 +18,7 @@ except ImportError:
     HAS_LIB = False
 
 import json
+import ssl
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.network.common.utils import to_list, ComplexList
@@ -186,14 +187,35 @@ class Api:
         port = self._module.params['port']
 
         timeout = self._module.params['timeout']
+        use_ssl = self._module.params['use_ssl']
 
         if not HAS_LIB:
             self._module.fail_json(
                 msg="RouterOS API support requires `librouteros` " +
                 "Python package - pip install librouteros")
         else:
-            self._api = librouteros.connect(host=host, port=port, username=username,
-                                            password=password, timeout=timeout)
+            if use_ssl:
+                ctx = ssl.create_default_context()
+                ctx.check_hostname = False
+                ctx.verify_mode = ssl.CERT_NONE
+                ctx.check_hostname = False
+                ctx.set_ciphers('ADH')
+                self._api = librouteros.connect(
+                    host=host,
+                    port=port,
+                    username=username,
+                    password=password,
+                    timeout=timeout,
+                    ssl_wrapper=ctx.wrap_socket,
+                )
+            else:
+                self._api = librouteros.connect(
+                    host=host,
+                    port=port,
+                    username=username,
+                    password=password,
+                    timeout=timeout,
+                )
 
     def exec_command(self, cmd):
         api_cmd = cli_to_api(cmd)

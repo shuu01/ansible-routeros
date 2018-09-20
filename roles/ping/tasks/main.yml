@@ -1,0 +1,16 @@
+- name: ping
+  connection: local
+  shell: "fping {{item}} -c 1 -q -p 40"
+  register: result
+  loop: "{{ ansible_hosts|shuffle }}"
+  ignore_errors: yes
+  changed_when: false
+
+- set_fact:
+    ansible_host: "{{item.item}}"
+  when: item.rc == 0
+  loop: "{{result.results}}"
+  no_log: yes
+
+- debug:
+    msg: "{{ansible_host}}"

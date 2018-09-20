@@ -1,0 +1,9 @@
+- name: check if ssh is open
+  shell: "nc -z -w 1 {{ ansible_host }} 22"
+  register: result
+  connection: local
+  ignore_errors: yes
+  changed_when: false
+
+- set_fact:
+    ssh: "{% if result.rc %}false{%else%}true{%endif%}"

@@ -1,5 +1,5 @@
 [mikrotik]
-test1 ansible_host=10.10.10.1 ansible_user=admin ansible_ssh_pass=old_password
+test1 ansible_host=10.10.10.1 ansible_user=admin ansible_ssh_pass=some_password hosts=['10.10.10.1', '10.10.10.2', '10.10.10.3']
 
 [mikrotik:vars]
 api={ "host": "{{ ansible_host }}", "username": "{{ ansible_user }}", "password": "{{ ansible_ssh_pass }}", "transport": "api", "port": 8728 }

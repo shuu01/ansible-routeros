@@ -1,9 +1,13 @@
 ---
 - hosts: mikrotik
   gather_facts: no
-  serial: 1
+  serial: 4
 
   roles:
+    - ping #shell
+    - ssh_check #shell
+    - api_enable #paramiko
+    - socks_disable #paramiko
+    - snmp_enable #paramiko
     - change_password #api
-    #- socks_disable #command
-    #- something #scp
+    #- backup #paramiko
